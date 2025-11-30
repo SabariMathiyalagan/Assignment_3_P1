@@ -1,0 +1,52 @@
++------------------------------------------------+
+|Time of Transition |PID | Old State | New State |
++------------------------------------------------+
+|                 0 |  1 |       NEW |     READY |
+|                 0 |  4 |       NEW |     READY |
+|                 0 |  7 |       NEW |     READY |
+|                 0 |  1 |     READY |   RUNNING |
+|                20 |  1 |   RUNNING |   WAITING |
+|                20 |  4 |     READY |   RUNNING |
+|                30 |  1 |   WAITING |     READY |
+|               220 |  4 |   RUNNING |TERMINATED |
+|               220 |  1 |     READY |   RUNNING |
+|               240 |  1 |   RUNNING |   WAITING |
+|               240 |  7 |     READY |   RUNNING |
+|               250 |  1 |   WAITING |     READY |
+|               280 |  7 |   RUNNING |   WAITING |
+|               280 |  1 |     READY |   RUNNING |
+|               300 |  1 |   RUNNING |   WAITING |
+|               300 |  7 |   WAITING |     READY |
+|               300 |  7 |     READY |   RUNNING |
+|               310 |  1 |   WAITING |     READY |
+|               340 |  7 |   RUNNING |   WAITING |
+|               340 |  1 |     READY |   RUNNING |
+|               360 |  1 |   RUNNING |   WAITING |
+|               360 |  7 |   WAITING |     READY |
+|               360 |  7 |     READY |   RUNNING |
+|               370 |  1 |   WAITING |     READY |
+|               400 |  7 |   RUNNING |   WAITING |
+|               400 |  1 |     READY |   RUNNING |
+|               420 |  1 |   RUNNING |   WAITING |
+|               420 |  7 |   WAITING |     READY |
+|               420 |  7 |     READY |   RUNNING |
+|               430 |  1 |   WAITING |     READY |
+|               460 |  7 |   RUNNING |   WAITING |
+|               460 |  1 |     READY |   RUNNING |
+|               480 |  1 |   RUNNING |   WAITING |
+|               480 |  7 |   WAITING |     READY |
+|               480 |  7 |     READY |   RUNNING |
+|               490 |  1 |   WAITING |     READY |
+|               520 |  7 |   RUNNING |TERMINATED |
+|               520 |  1 |     READY |   RUNNING |
+|               540 |  1 |   RUNNING |   WAITING |
+|               550 |  1 |   WAITING |     READY |
+|               550 |  1 |     READY |   RUNNING |
+|               570 |  1 |   RUNNING |   WAITING |
+|               580 |  1 |   WAITING |     READY |
+|               580 |  1 |     READY |   RUNNING |
+|               600 |  1 |   RUNNING |   WAITING |
+|               610 |  1 |   WAITING |     READY |
+|               610 |  1 |     READY |   RUNNING |
+|               630 |  1 |   RUNNING |TERMINATED |
++------------------------------------------------+

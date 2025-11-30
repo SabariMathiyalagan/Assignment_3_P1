@@ -1,6 +1,7 @@
 /**
  * @file interrupts.hpp
  * @author Sasisekhar Govind
+ * @author Sabari Mathiyalagan 101296257
  * @brief template main.cpp file for Assignment 3 Part 1 of SYSC4001
  * 
  */
@@ -65,6 +66,7 @@ struct PCB{
     enum states     state;
     unsigned int    io_freq;
     unsigned int    io_duration;
+    unsigned int    io_start_time;
 };
 
 //------------------------------------HELPER FUNCTIONS FOR THE SIMULATOR------------------------------
@@ -269,6 +271,7 @@ PCB add_process(std::vector<std::string> tokens) {
     process.start_time = -1;
     process.partition_number = -1;
     process.state = NOT_ASSIGNED;
+    process.io_start_time = 0;
 
     return process;
 }
@@ -313,6 +316,7 @@ void idle_CPU(PCB &running) {
     running.size = 0;
     running.state = NOT_ASSIGNED;
     running.PID = -1;
+    running.io_start_time = 0;
 }
 
 #endif

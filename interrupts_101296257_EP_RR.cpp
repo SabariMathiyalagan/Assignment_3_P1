@@ -1,18 +1,19 @@
 /**
  * @file interrupts.cpp
  * @author Sasisekhar Govind
+ * @author Sabari Mathiyalagan 101296257
  * @brief template main.cpp file for Assignment 3 Part 1 of SYSC4001
  * 
  */
 
-#include<interrupts_student1_student2.hpp>
+#include<interrupts_101296257.hpp>
 
-void FCFS(std::vector<PCB> &ready_queue) {
+void EP_RR(std::vector<PCB> &ready_queue) {
     std::sort( 
                 ready_queue.begin(),
                 ready_queue.end(),
                 []( const PCB &first, const PCB &second ){
-                    return (first.arrival_time > second.arrival_time); 
+                    return (first.PID > second.PID); 
                 } 
             );
 }
@@ -36,6 +37,9 @@ std::tuple<std::string /* add std::string for bonus mark */ > run_simulation(std
 
     //make the output table (the header row)
     execution_status = print_exec_header();
+    unsigned int cpu_time_executed = 0;
+    const unsigned int time_slice = 100;
+    unsigned int remaining_time_slice = time_slice;
 
     //Loop while till there are no ready or waiting processes.
     //This is the main reason I have job_list, you don't have to use it.
@@ -63,12 +67,72 @@ std::tuple<std::string /* add std::string for bonus mark */ > run_simulation(std
 
         ///////////////////////MANAGE WAIT QUEUE/////////////////////////
         //This mainly involves keeping track of how long a process must remain in the ready queue
+        for (auto it = wait_queue.begin(); it != wait_queue.end(); ) {
+            if (it->io_start_time + it->io_duration <= current_time) {
+                it->state = READY;
+                ready_queue.push_back(*it);
+                execution_status += print_exec_status(current_time, it->PID, WAITING, READY);
+                sync_queue(job_list, *it);
+                it = wait_queue.erase(it);
+            } 
+            else {
+                ++it;
+            }
+        }
 
         /////////////////////////////////////////////////////////////////
 
         //////////////////////////SCHEDULER//////////////////////////////
-        FCFS(ready_queue); //example of FCFS is shown here
+        if (!ready_queue.empty()) {
+            EP_RR(ready_queue);
+            if (running.state == NOT_ASSIGNED || (!ready_queue.empty() && ready_queue.back().PID < running.PID)) {
+                
+                if (running.state == RUNNING) {
+                    running.state = READY;
+                    ready_queue.push_back(running);
+                    execution_status += print_exec_status(current_time, running.PID, RUNNING, READY);
+                    sync_queue(job_list, running);
+                }
+                EP_RR(ready_queue);
+                run_process(running, job_list, ready_queue, current_time);
+                execution_status += print_exec_status(current_time, running.PID, READY, RUNNING);
+                cpu_time_executed = 0;
+                remaining_time_slice = time_slice;
+            }
+        }
         /////////////////////////////////////////////////////////////////
+        if (running.state == RUNNING) {
+            cpu_time_executed++;
+            running.remaining_time--;
+            remaining_time_slice--;
+        
+            if (running.io_freq > 0 && cpu_time_executed == running.io_freq 
+                && running.remaining_time > 0) {
+                running.state = WAITING;
+                running.io_start_time = current_time + 1;
+                wait_queue.push_back(running);
+                execution_status += print_exec_status(current_time + 1, running.PID, RUNNING, WAITING);
+                sync_queue(job_list, running);
+                idle_CPU(running);
+                cpu_time_executed = 0;
+            }
+            else if (remaining_time_slice == 0 && running.remaining_time > 0) {
+                running.state = READY;
+                ready_queue.push_back(running);
+                execution_status += print_exec_status(current_time + 1, running.PID, RUNNING, READY);
+                sync_queue(job_list, running);
+                idle_CPU(running);
+                cpu_time_executed = 0;
+            }
+            else if (running.remaining_time == 0) {
+                execution_status += print_exec_status(current_time + 1, running.PID, RUNNING, TERMINATED);
+                terminate_process(running, job_list);
+                idle_CPU(running);
+                cpu_time_executed = 0;
+            }
+        }
+        
+        current_time++;
 
     }
     
